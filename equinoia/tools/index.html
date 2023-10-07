@@ -62,10 +62,11 @@
             
             schools = await fetch('https://www.equinoia.online/api/supportingSchools/get')
             j = await schools.json()
+            selecting = null
 
             let el = document.getElementById('radio')
             el.replaceChildren()
-            
+
             for (const school of j.schools) {
                 const radioContainer = document.createElement('div')
                 radioContainer.className = 'selectable'
