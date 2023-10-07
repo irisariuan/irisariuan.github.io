@@ -13,8 +13,9 @@
             schools = await fetch('https://www.equinoia.online/api/supportingSchools/get')
             j = await schools.json()
             console.log(j)
+            
             let el = document.getElementById('radio')
-            console.log(el)
+            
             for (const school of j.schools) {
                 const radioContainer = document.createElement('div')
                 radioContainer.className = 'selectable'
@@ -38,6 +39,7 @@
                 el?.appendChild(radioContainer)
             }
         }
+
         async function submit() {
             console.log('Delete')
             const res = await fetch('https://www.equinoia.online/api/supportingSchools/edit', {
@@ -57,6 +59,34 @@
                 )
             })
             console.log(await res.text())
+            
+            schools = await fetch('https://www.equinoia.online/api/supportingSchools/get')
+            j = await schools.json()
+
+            const arr = []
+            for (const school of j.schools) {
+                const radioContainer = document.createElement('div')
+                radioContainer.className = 'selectable'
+                const radioBtn = document.createElement('input')
+                const radioLbl = document.createElement('p')
+                radioBtn.type = 'radio'
+                radioBtn.name = 'school'
+                radioBtn.value = school.cabinetName
+                radioBtn.dataset.chineseName = school.schoolName.chineseName
+                
+                radioLbl.textContent = school.cabinetName
+                radioBtn.onclick = function () {
+                    selecting = this.dataset?.chineseName
+                    document.querySelector('span.del').textContent = selecting
+                    document.querySelector('button#delBtn').disabled = false
+                    console.log(selecting)
+                }
+                // console.log(school.cabinetName)
+                radioContainer.appendChild(radioBtn)
+                radioContainer.appendChild(radioLbl)
+                arr.push(radioContainer)
+            }
+            document.getElementById('radio').replaceChildren(arr)
         }
     </script>
     <style>
@@ -105,5 +135,4 @@
         <button onclick="submit()" disabled id="delBtn">Delete</button>
     </div>
 </body>
-
 </html>
