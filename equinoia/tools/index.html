@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equinoia Supporting School Editor</title>
+    <script>
+        let selecting = null
+        let schools = null
+        let j = null
+        window.onload = async () => {
+            schools = await fetch('https://www.equinoia.online/api/supportingSchools/get')
+            j = await schools.json()
+            console.log(j)
+            let el = document.getElementById('radio')
+            console.log(el)
+            for (const school of j.schools) {
+                const radioContainer = document.createElement('div')
+                radioContainer.className = 'selectable'
+                const radioBtn = document.createElement('input')
+                const radioLbl = document.createElement('p')
+                radioBtn.type = 'radio'
+                radioBtn.name = 'school'
+                radioBtn.value = school.cabinetName
+                radioBtn.dataset.chineseName = school.schoolName.chineseName
+
+                radioLbl.textContent = school.cabinetName
+                radioBtn.onclick = function () {
+                    selecting = this.dataset?.chineseName
+                    document.querySelector('span.del').textContent = selecting
+                    document.querySelector('button#delBtn').disabled = false
+                    console.log(selecting)
+                }
+                // console.log(school.cabinetName)
+                radioContainer.appendChild(radioBtn)
+                radioContainer.appendChild(radioLbl)
+                el?.appendChild(radioContainer)
+            }
+        }
+        async function submit() {
+            console.log('Delete')
+            const res = await fetch('https://www.equinoia.online/api/supportingSchools/edit', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'http://localhost:3000' }, body: JSON.stringify(
+                    {
+                        "type": "remove",
+                        "data": [
+                            j.schools.findIndex(v => v.schoolName.chineseName === selecting)
+                        ],
+                        "token": document.querySelector('input#token').value
+                    }
+                )
+            })
+            console.log(await res.text())
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            padding: 4px;
+        }
+
+        .auth {
+            display: flex;
+            gap: 4px;
+        }
+
+        #radio {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .selectable {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .selectable * {
+            margin: 0 4px 0 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div class="auth">
+            <p>Auth Key</p>
+            <input type="text" name="token" id="token" title="Token">
+        </div>
+        <div id="radio"></div>
+        <div class="">
+            <span>Now deleting: </span>
+            <span class="del"></span>
+        </div>
+        <button onclick="submit()" disabled id="delBtn">Delete</button>
+    </div>
+</body>
+
+</html>
