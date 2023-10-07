@@ -63,6 +63,7 @@
             schools = await fetch('https://www.equinoia.online/api/supportingSchools/get')
             j = await schools.json()
             selecting = null
+            document.querySelector('button#delBtn').textContent = ''
 
             let el = document.getElementById('radio')
             el.replaceChildren()
