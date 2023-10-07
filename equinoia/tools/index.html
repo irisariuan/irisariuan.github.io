@@ -41,11 +41,16 @@
         async function submit() {
             console.log('Delete')
             const res = await fetch('https://www.equinoia.online/api/supportingSchools/edit', {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'http://localhost:3000' }, body: JSON.stringify(
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:3000'
+                },
+                body: JSON.stringify(
                     {
                         "type": "remove",
                         "data": [
-                            j.schools.findIndex(v => v.schoolName.chineseName === selecting)
+                            j.schools.find(v => v.schoolName.chineseName === selecting)
                         ],
                         "token": document.querySelector('input#token').value
                     }
