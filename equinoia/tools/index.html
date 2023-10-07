@@ -63,7 +63,9 @@
             schools = await fetch('https://www.equinoia.online/api/supportingSchools/get')
             j = await schools.json()
 
-            const arr = []
+            let el = document.getElementById('radio')
+            el.replaceChildren()
+            
             for (const school of j.schools) {
                 const radioContainer = document.createElement('div')
                 radioContainer.className = 'selectable'
@@ -84,9 +86,8 @@
                 // console.log(school.cabinetName)
                 radioContainer.appendChild(radioBtn)
                 radioContainer.appendChild(radioLbl)
-                arr.push(radioContainer)
+                el?.appendChild(radioContainer)
             }
-            document.getElementById('radio').replaceChildren(arr)
         }
     </script>
     <style>
